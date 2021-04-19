@@ -32,68 +32,73 @@ namespace ULaw.ApplicationProcessor
         public DegreeGradeEnum DegreeGrade { get; set; }
         public DegreeSubjectEnum DegreeSubject { get; set; }
 
+        // This could be passed into constructor too?
+        public string EmailAddress => "AdmissionsTeam@Ulaw.co.uk";
+        public string CourseRefText => string.Format("course reference: {0} starting on {1}", this.CourseCode, this.StartDate.ToLongDateString());
+
         public string Process()
         {
-            // This could be set as a property instead of a local variable
-            var emailAddress = "AdmissionsTeam@Ulaw.co.uk";
-            // Again, this could be a proprty of sorts
-            var courseRefText = string.Format("course reference: {0} starting on {1}", this.CourseCode, this.StartDate.ToLongDateString());
-
+            // Start
             var result = new StringBuilder("<html><body><h1>Your Recent Application from the University of Law</h1>");
 
             // Adding introduction
             result.Append(string.Format("<p> Dear {0}, </p>", FirstName));
             result.Append("<p/> Further to your recent application");
 
-            // Selecting Body
+            // Selecting body to add
             if (DegreeGrade == DegreeGradeEnum.twoTwo)
             {
-                // Add Body
-                result.Append(string.Format(" for our {0}, we are writing to inform you that we are currently assessing your information and will be in touch shortly.", courseRefText));
-                result.Append(string.Format("<br/> If you wish to discuss any aspect of your application, please contact us at {0}.", emailAddress));
-
-                // Could be done in AddSignature with bool to decide if html does not need "/"
-                result.Append("<br/>");
+                AddTwoTwo(result);
             }
             else if (DegreeGrade == DegreeGradeEnum.third)
             {
-                // Add Body
-                result.Append(", we are sorry to inform you that you have not been successful on this occasion.");
-                result.Append(string.Format("<br/> If you wish to discuss the decision further, or discuss the possibility of applying for an alternative course with us, please contact us at {0}.", emailAddress));
-
-                // Could be done in AddSignature with bool to decide if html does not need "/"
-                result.Append("<br>");
+                AddThird(result);
             }
             else if (DegreeSubject == DegreeSubjectEnum.law || DegreeSubject == DegreeSubjectEnum.lawAndBusiness)
             {
-                decimal depositAmount = 350.00M;
-
-                // Add Body
-                result.Append(string.Format(", we are delighted to offer you a place on our {0}.", courseRefText));
-                result.Append(string.Format("<br/> This offer will be subject to evidence of your qualifying {0} degree at grade: {1}.", DegreeSubject.ToDescription(), DegreeGrade.ToDescription()));
-                result.Append(string.Format("<br/> Please contact us as soon as possible to confirm your acceptance of your place and arrange payment of the £{0} deposit fee to secure your place.", depositAmount.ToString()));
-                result.Append(string.Format("<br/> We look forward to welcoming you to the University,"));
-
-                // Could be done in AddSignature with bool to decide if html does not need "/"
-                result.Append("<br/>");
+                AddLaw(result);
             }
             else
             {
-                // Add Body
-                result.Append(string.Format(" for our {0}, we are writing to inform you that we are currently assessing your information and will be in touch shortly.", courseRefText));
-                result.Append(string.Format("<br/> If you wish to discuss any aspect of your application, please contact us at {0}.", emailAddress));
-
-                // Could be done in AddSignature with bool to decide if html does not need "/"
-                result.Append("<br/>");
+                AddGeneric(result);
             }
 
             // Adding signature
             result.Append(" Yours sincerely,");
             result.Append("<p/> The Admissions Team,");
 
+            // End
             result.Append(string.Format("</body></html>"));
 
             return result.ToString();
+        }
+
+        private void AddTwoTwo(StringBuilder result)
+        {
+            result.Append(string.Format(" for our {0}, we are writing to inform you that we are currently assessing your information and will be in touch shortly.", CourseRefText));
+            result.Append(string.Format("<br/> If you wish to discuss any aspect of your application, please contact us at {0}.<br/>", EmailAddress));
+        }
+
+        private void AddThird(StringBuilder result)
+        {
+            result.Append(", we are sorry to inform you that you have not been successful on this occasion.");
+            result.Append(string.Format("<br/> If you wish to discuss the decision further, or discuss the possibility of applying for an alternative course with us, please contact us at {0}.<br>", EmailAddress));
+        }
+
+        private void AddLaw(StringBuilder result)
+        {
+            decimal depositAmount = 350.00M;
+
+            result.Append(string.Format(", we are delighted to offer you a place on our {0}.", CourseRefText));
+            result.Append(string.Format("<br/> This offer will be subject to evidence of your qualifying {0} degree at grade: {1}.", DegreeSubject.ToDescription(), DegreeGrade.ToDescription()));
+            result.Append(string.Format("<br/> Please contact us as soon as possible to confirm your acceptance of your place and arrange payment of the £{0} deposit fee to secure your place.", depositAmount.ToString()));
+            result.Append(string.Format("<br/> We look forward to welcoming you to the University,<br/>"));
+        }
+
+        private void AddGeneric(StringBuilder result)
+        {
+            result.Append(string.Format(" for our {0}, we are writing to inform you that we are currently assessing your information and will be in touch shortly.", CourseRefText));
+            result.Append(string.Format("<br/> If you wish to discuss any aspect of your application, please contact us at {0}.<br/>", EmailAddress));
         }
     }
 }
