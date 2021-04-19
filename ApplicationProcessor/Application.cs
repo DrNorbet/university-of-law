@@ -55,42 +55,36 @@ namespace ULaw.ApplicationProcessor
                 // Could be done in AddSignature with bool to decide if html does not need "/"
                 result.Append("<br/>");
             }
+            else if (DegreeGrade == DegreeGradeEnum.third)
+            {
+                // Add Body
+                result.Append(", we are sorry to inform you that you have not been successful on this occasion.");
+                result.Append(string.Format("<br/> If you wish to discuss the decision further, or discuss the possibility of applying for an alternative course with us, please contact us at {0}.", emailAddress));
+
+                // Could be done in AddSignature with bool to decide if html does not need "/"
+                result.Append("<br>");
+            }
+            else if (DegreeSubject == DegreeSubjectEnum.law || DegreeSubject == DegreeSubjectEnum.lawAndBusiness)
+            {
+                decimal depositAmount = 350.00M;
+
+                // Add Body
+                result.Append(string.Format(", we are delighted to offer you a place on our {0}.", courseRefText));
+                result.Append(string.Format("<br/> This offer will be subject to evidence of your qualifying {0} degree at grade: {1}.", DegreeSubject.ToDescription(), DegreeGrade.ToDescription()));
+                result.Append(string.Format("<br/> Please contact us as soon as possible to confirm your acceptance of your place and arrange payment of the £{0} deposit fee to secure your place.", depositAmount.ToString()));
+                result.Append(string.Format("<br/> We look forward to welcoming you to the University,"));
+
+                // Could be done in AddSignature with bool to decide if html does not need "/"
+                result.Append("<br/>");
+            }
             else
             {
-                if (DegreeGrade == DegreeGradeEnum.third)
-                {
-                    // Add Body
-                    result.Append(", we are sorry to inform you that you have not been successful on this occasion.");
-                    result.Append(string.Format("<br/> If you wish to discuss the decision further, or discuss the possibility of applying for an alternative course with us, please contact us at {0}.", emailAddress));
+                // Add Body
+                result.Append(string.Format(" for our {0}, we are writing to inform you that we are currently assessing your information and will be in touch shortly.", courseRefText));
+                result.Append(string.Format("<br/> If you wish to discuss any aspect of your application, please contact us at {0}.", emailAddress));
 
-                    // Could be done in AddSignature with bool to decide if html does not need "/"
-                    result.Append("<br>");
-                }
-                else
-                {
-                    if (DegreeSubject == DegreeSubjectEnum.law || DegreeSubject == DegreeSubjectEnum.lawAndBusiness)
-                    {
-                        decimal depositAmount = 350.00M;
-
-                        // Add Body
-                        result.Append(string.Format(", we are delighted to offer you a place on our {0}.", courseRefText));
-                        result.Append(string.Format("<br/> This offer will be subject to evidence of your qualifying {0} degree at grade: {1}.", DegreeSubject.ToDescription(), DegreeGrade.ToDescription()));
-                        result.Append(string.Format("<br/> Please contact us as soon as possible to confirm your acceptance of your place and arrange payment of the £{0} deposit fee to secure your place.", depositAmount.ToString()));
-                        result.Append(string.Format("<br/> We look forward to welcoming you to the University,"));
-
-                        // Could be done in AddSignature with bool to decide if html does not need "/"
-                        result.Append("<br/>");
-                    }
-                    else
-                    {
-                        // Add Body
-                        result.Append(string.Format(" for our {0}, we are writing to inform you that we are currently assessing your information and will be in touch shortly.", courseRefText));
-                        result.Append(string.Format("<br/> If you wish to discuss any aspect of your application, please contact us at {0}.", emailAddress));
-
-                        // Could be done in AddSignature with bool to decide if html does not need "/"
-                        result.Append("<br/>");
-                    }
-                }
+                // Could be done in AddSignature with bool to decide if html does not need "/"
+                result.Append("<br/>");
             }
 
             // Adding signature
